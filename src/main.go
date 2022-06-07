@@ -2,7 +2,9 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 )
 
 type problem struct {
@@ -10,8 +12,11 @@ type problem struct {
 	id      string
 }
 
+var myLogger *log.Logger
+
 func basicRouter(w http.ResponseWriter, r *http.Request) {
 	var localPath string = "public/"
+	myLogger.Print(r.URL)
 	content, err := ioutil.ReadFile(localPath + r.URL.Path[1:])
 	if err != nil {
 		w.WriteHeader(404)
@@ -22,6 +27,7 @@ func basicRouter(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	myLogger = log.New(os.Stdout, "INFO: ", log.LstdFlags)
 	http.HandleFunc("/", basicRouter)
 	if error := http.ListenAndServe(":3000", nil); error != nil {
 		panic(error)
