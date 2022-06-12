@@ -26,6 +26,15 @@ func basicRouter(w http.ResponseWriter, r *http.Request) {
 	w.Write(content)
 }
 
+func crowrlingPage(url string) {
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+}
+
 func main() {
 	myLogger = log.New(os.Stdout, "INFO: ", log.LstdFlags)
 	http.HandleFunc("/", basicRouter)
